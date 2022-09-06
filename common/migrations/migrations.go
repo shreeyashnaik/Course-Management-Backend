@@ -9,6 +9,7 @@ import (
 
 func MigrateModels() {
 	database := db.GetDB()
+	database.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 
 	if err := database.AutoMigrate(
 		&models.User{},
