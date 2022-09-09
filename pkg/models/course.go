@@ -15,13 +15,13 @@ type Course struct {
 	UpdatedAt int64
 
 	// Course Details
-	Title       string
-	Description string
-	VideoURL    string
+	Title       string         `gorm:"not null"`
+	Description string         `gorm:"not null"`
+	VideoURL    string         `gorm:"not null"`
 	Topics      pq.StringArray `gorm:"type:text[]"`
 	Duration    float64        `gorm:"type:decimal"`
-	Category    string
-	Points      uint
+	Category    string         `gorm:"not null"`
+	Points      uint           `gorm:"not null"`
 
 	// Super Admin Approval
 	IsApproved bool `gorm:"default:false"`

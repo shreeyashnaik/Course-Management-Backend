@@ -22,10 +22,10 @@ type User struct {
 	UpdatedAt int64
 
 	// User Details
-	Name         string
-	Email        string
-	Password     string
-	Role         Role `gorm:"type:role;default:employee"`
+	Name         string `gorm:"not null"`
+	Email        string `gorm:"not null, unique"`
+	Password     string `gorm:"not null"`
+	Role         Role   `gorm:"type:role;default:employee"`
 	RewardPoints uint
 
 	// Courses designed by Admin, hence will only non-empty if user is Admin
