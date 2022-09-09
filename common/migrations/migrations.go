@@ -9,11 +9,24 @@ import (
 
 func MigrateModels() {
 	database := db.GetDB()
+
 	database.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
+
+	// Define role as enum
+	database.Exec("CREATE TYPE role AS ENUM ('superadmin', 'admin', 'employee');")
 
 	if err := database.AutoMigrate(
 		&models.User{},
 		&models.Course{},
+	); err != nil {
+		log.Panic(err)
+	}
+
+	// Setup Join table for viewed courses
+	if err := database.SetupJoinTable(
+		&models.User{},
+		"ViewedCourses",
+		&models.ViewedCourses{},
 	); err != nil {
 		log.Panic(err)
 	}

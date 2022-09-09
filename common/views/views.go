@@ -6,6 +6,28 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// Success Views
+func OkView(ctx *fiber.Ctx, data interface{}) error {
+	return ctx.
+		Status(200).
+		JSON(fiber.Map{
+			"msg":  "ok",
+			"body": data,
+		})
+
+}
+
+func CreatedView(ctx *fiber.Ctx, data interface{}) error {
+	return ctx.
+		Status(201).
+		JSON(fiber.Map{
+			"msg":  "ok",
+			"body": data,
+		})
+
+}
+
+// Error Views
 func InvalidParams(ctx *fiber.Ctx) error {
 	return ctx.
 		Status(400).
@@ -21,16 +43,6 @@ func InternalServerError(ctx *fiber.Ctx, err error) error {
 		JSON(fiber.Map{
 			"msg": "something went wrong",
 		})
-}
-
-func DataView(ctx *fiber.Ctx, data interface{}) error {
-	return ctx.
-		Status(200).
-		JSON(fiber.Map{
-			"msg":  "ok",
-			"body": data,
-		})
-
 }
 
 func RecordNotFound(ctx *fiber.Ctx) error {

@@ -12,6 +12,7 @@ var (
 	PORT                 = "8080"
 	CORS_ALLOWED_ORIGINS = "http://localhost:3030, http://localhost:3031"
 	DB_URI               = ""
+	JWT_SECRET_KEY       = ""
 )
 
 func LoadConfigVars() {
