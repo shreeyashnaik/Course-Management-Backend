@@ -7,38 +7,38 @@ import (
 
 // User related Schemas
 type SignupPayload struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Name     string `json:"name" validate:"required"`
+	Email    string `json:"email" validate:"required"`
+	Password string `json:"password" validate:"required"`
 }
 
 type LoginPayload struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" validate:"required"`
+	Password string `json:"password" validate:"required"`
 }
 
 // Course related schemas
 type CreateCoursePayload struct {
-	Title       string   `json:"title"`
-	Description string   `json:"description"`
-	VideoURL    string   `json:"video_url"`
-	Topics      []string `json:"topics"`
-	Duration    float64  `json:"duration"`
-	Category    string   `json:"category"`
-	Points      uint     `json:"points"`
+	Title       string   `json:"title" validate:"required"`
+	Description string   `json:"description" validate:"required"`
+	VideoURL    string   `json:"video_url" validate:"required"`
+	Topics      []string `json:"topics" validate:"required"`
+	Duration    float64  `json:"duration" validate:"required"`
+	Category    string   `json:"category" validate:"required"`
+	Points      uint     `json:"points" validate:"required"`
 }
 
 type ApproveCourseQuery struct {
-	CourseID uuid.UUID `json:"course_id"`
+	CourseID uuid.UUID `json:"course_id" validate:"required"`
 }
 
 type DeleteCourseQuery struct {
-	CourseID uuid.UUID `json:"course_id"`
+	CourseID uuid.UUID `json:"course_id" validate:"required"`
 }
 
 type ChangeRolePayload struct {
-	Role      models.Role `json:"role"`
-	ChangeeID uuid.UUID   `json:"changee_id"`
+	Role      models.Role `json:"role" validate:"required"`
+	ChangeeID uuid.UUID   `json:"changee_id" validate:"required"`
 }
 
 type ApprovedCoursesQuery struct {
@@ -48,6 +48,6 @@ type ApprovedCoursesQuery struct {
 }
 
 type ViewCourse struct {
-	CourseID          uuid.UUID `json:"course_id"`
-	CompletedDuration float64   `json:"completed_duration"`
+	CourseID          uuid.UUID `json:"course_id" validate:"required"`
+	CompletedDuration float64   `json:"completed_duration" validate:"required"`
 }
