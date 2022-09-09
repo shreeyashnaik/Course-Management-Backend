@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/shreeyashnaik/Course-Management-Backend/common/db"
 	"github.com/shreeyashnaik/Course-Management-Backend/common/migrations"
 	"github.com/shreeyashnaik/Course-Management-Backend/common/utils"
 	"github.com/shreeyashnaik/Course-Management-Backend/config"
@@ -19,6 +20,9 @@ func main() {
 	if viper.GetBool("MIGRATE") {
 		migrations.MigrateModels()
 	}
+
+	// Initialize DB Services
+	db.InitServices()
 
 	server.StartCoreServer()
 }
