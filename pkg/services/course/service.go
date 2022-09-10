@@ -15,7 +15,7 @@ type Service interface {
 	ApproveCourse(courseID uuid.UUID) error
 	DeleteCourse(courseID uuid.UUID, userID uuid.UUID) error
 	UpdateCourse(c *models.Course, courseID uuid.UUID, userID uuid.UUID) (*models.Course, error)
-	FetchApprovedCourses(p *schemas.ApprovedCoursesQuery) (*models.Course, error)
+	FetchApprovedCourses(p *schemas.ApprovedCoursesQuery) ([]models.Course, error)
 	GetCourseByID(id uuid.UUID) (*models.Course, error)
 	CreateViewedCourse(course *models.ViewedCourses) (*models.ViewedCourses, error)
 	FetchPendingCoursesForUser(userID uuid.UUID) ([]models.Course, error)
@@ -38,7 +38,7 @@ func (crs *courseSvc) UpdateCourse(c *models.Course, courseID uuid.UUID, userID 
 	return crs.repository.UpdateCourse(c, courseID, userID)
 }
 
-func (crs *courseSvc) FetchApprovedCourses(p *schemas.ApprovedCoursesQuery) (*models.Course, error) {
+func (crs *courseSvc) FetchApprovedCourses(p *schemas.ApprovedCoursesQuery) ([]models.Course, error) {
 	return crs.repository.FetchApprovedCourses(p)
 }
 

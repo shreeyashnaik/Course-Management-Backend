@@ -29,7 +29,7 @@ type CreateCoursePayload struct {
 }
 
 type ApproveCourseQuery struct {
-	CourseID uuid.UUID `json:"course_id" validate:"required"`
+	CourseID uuid.UUID `query:"course_id" validate:"required"`
 }
 
 type DeleteCourseQuery struct {
@@ -42,9 +42,9 @@ type ChangeRolePayload struct {
 }
 
 type ApprovedCoursesQuery struct {
-	Page              int  `json:"page,default=1"`
-	PerPage           int  `json:"per_page,default=10"`
-	SortByCategoryAsc bool `json:"sort_by_category_asc,default=true"`
+	Page              int  `query:"page,default=1"`
+	PerPage           int  `query:"per_page,default=10"`
+	SortByCategoryAsc bool `query:"sort_by_category_asc,default=true"`
 }
 
 type ViewCourse struct {

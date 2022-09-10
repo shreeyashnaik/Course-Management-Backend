@@ -72,6 +72,10 @@ func Login(ctx *fiber.Ctx) error {
 
 func ChangeRole(ctx *fiber.Ctx) error {
 	p := new(schemas.ChangeRolePayload)
+	if err := ctx.BodyParser(p); err != nil {
+		log.Println(err)
+		return views.InvalidParams(ctx)
+	}
 
 	userID := ctx.Locals("userId").(uuid.UUID)
 

@@ -10,7 +10,7 @@ import (
 
 type Course struct {
 	// Primary key ID
-	ID        uuid.UUID `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()" json:"id"`
+	ID        uuid.UUID `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()" json:"id" validate:"required"`
 	CreatedAt int64
 	UpdatedAt int64
 
@@ -34,9 +34,9 @@ type Course struct {
 type ViewedCourses struct {
 	UserID            uuid.UUID `gorm:"primaryKey"`
 	CourseID          uuid.UUID `gorm:"primaryKey"`
-	LastViewed        int64
-	CompletedDuration float64 `gorm:"type:decimal"`
-	IsCompleted       bool
+	LastViewed        int64     `gorm:"not null"`
+	CompletedDuration float64   `gorm:"not null;type:decimal"`
+	IsCompleted       bool      `gorm:"not null"`
 }
 
 // Hooks; get triggered on every creation or updation on course table row

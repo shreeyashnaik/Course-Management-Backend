@@ -15,13 +15,6 @@ func MigrateModels() {
 	// Define role as enum
 	database.Exec("CREATE TYPE role AS ENUM ('superadmin', 'admin', 'employee');")
 
-	if err := database.AutoMigrate(
-		&models.User{},
-		&models.Course{},
-	); err != nil {
-		log.Panic(err)
-	}
-
 	// Setup Join table for viewed courses
 	if err := database.SetupJoinTable(
 		&models.User{},
@@ -30,4 +23,12 @@ func MigrateModels() {
 	); err != nil {
 		log.Panic(err)
 	}
+
+	if err := database.AutoMigrate(
+		&models.User{},
+		&models.Course{},
+	); err != nil {
+		log.Panic(err)
+	}
+
 }

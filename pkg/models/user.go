@@ -23,7 +23,7 @@ type User struct {
 
 	// User Details
 	Name         string `gorm:"not null"`
-	Email        string `gorm:"not null, unique"`
+	Email        string `gorm:"unique;not null"`
 	Password     string `gorm:"not null"`
 	Role         Role   `gorm:"type:role;default:employee"`
 	RewardPoints uint
@@ -32,7 +32,7 @@ type User struct {
 	Courses []Course
 
 	// Courses viewed by Employee (pending/completed)
-	ViewedCourses []Course `gorm:"many2many:viewed_courses;"`
+	ViewedCourses []Course `gorm:"many2many:user_courses;"`
 }
 
 // Hooks; get triggered on every creation or updation on user table row

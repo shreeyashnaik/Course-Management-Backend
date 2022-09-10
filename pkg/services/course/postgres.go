@@ -17,7 +17,7 @@ type Repository interface {
 	ApproveCourse(courseID uuid.UUID) error
 	UpdateCourse(u *models.Course, courseID, userID uuid.UUID) (*models.Course, error)
 	DeleteCourse(courseID uuid.UUID, userID uuid.UUID) error
-	FetchApprovedCourses(p *schemas.ApprovedCoursesQuery) (*models.Course, error)
+	FetchApprovedCourses(p *schemas.ApprovedCoursesQuery) ([]models.Course, error)
 	GetCourseByID(id uuid.UUID) (*models.Course, error)
 	CreateViewedCourse(course *models.ViewedCourses) (*models.ViewedCourses, error)
 	FetchPendingCoursesForUser(userID uuid.UUID) ([]models.Course, error)
@@ -34,9 +34,10 @@ func (d *dbRepo) CreateCourse(c *schemas.CreateCoursePayload, userID uuid.UUID) 
 		Duration:    c.Duration,
 		Category:    c.Category,
 		Points:      c.Points,
+		UserID:      &userID,
 	}
 
-	if err := d.DB.Create(newCourse).Error; err != nil {
+	if err := d.DB.Create(&newCourse).Error; err != nil {
 		return nil, err
 	}
 
@@ -52,7 +53,7 @@ func (d *dbRepo) ApproveCourse(courseID uuid.UUID) error {
 }
 
 func (d *dbRepo) DeleteCourse(courseID uuid.UUID, userID uuid.UUID) error {
-	if err := d.DB.Find(&models.Course{}, "id = ? AND user_id = ?", courseID, userID).Error; err != nil {
+	if err := d.DB.First(&models.Course{}, "id = ? AND user_id = ?", courseID, userID).Error; err != nil {
 		return err
 	}
 
@@ -64,7 +65,7 @@ func (d *dbRepo) DeleteCourse(courseID uuid.UUID, userID uuid.UUID) error {
 }
 
 func (d *dbRepo) UpdateCourse(c *models.Course, courseID, userID uuid.UUID) (*models.Course, error) {
-	if err := d.DB.Find(&models.Course{}, "id = ? AND user_id = ?", courseID, userID).Error; err != nil {
+	if err := d.DB.First(&models.Course{}, "id = ? AND user_id = ?", courseID, userID).Error; err != nil {
 		return nil, err
 	}
 
@@ -75,8 +76,8 @@ func (d *dbRepo) UpdateCourse(c *models.Course, courseID, userID uuid.UUID) (*mo
 	return c, nil
 }
 
-func (d *dbRepo) FetchApprovedCourses(p *schemas.ApprovedCoursesQuery) (*models.Course, error) {
-	approvedCourses := &models.Course{}
+func (d *dbRepo) FetchApprovedCourses(p *schemas.ApprovedCoursesQuery) ([]models.Course, error) {
+	approvedCourses := []models.Course{}
 
 	orderByCategory := ""
 	if p.SortByCategoryAsc {
@@ -85,7 +86,7 @@ func (d *dbRepo) FetchApprovedCourses(p *schemas.ApprovedCoursesQuery) (*models.
 		orderByCategory = "category DESC"
 	}
 
-	if err := d.DB.Offset((p.Page-1)*p.PerPage).Limit(p.PerPage).Order(orderByCategory).Find(&models.Course{}, "is_approved = ?", true).Error; err != nil {
+	if err := d.DB.Offset((p.Page-1)*p.PerPage).Limit(p.PerPage).Order(orderByCategory).Find(&approvedCourses, "is_approved = ?", true).Error; err != nil {
 		return nil, err
 	}
 
@@ -114,9 +115,9 @@ func (d *dbRepo) CreateViewedCourse(course *models.ViewedCourses) (*models.Viewe
 
 func (d *dbRepo) FetchPendingCoursesForUser(userID uuid.UUID) ([]models.Course, error) {
 	courses := []models.Course{}
-	if err := d.DB.Joins("ViewedCourses").
-		Joins("Course").
-		Find(&courses, "viewed_courses.user_id = ? AND viewed_courses.is_completed = ?", userID, false).Error; err != nil {
+
+	if err := d.DB.Joins("JOIN viewed_courses ON courses.id = viewed_courses.course_id AND viewed_courses.is_completed = false AND viewed_courses.user_id = ?", userID).
+		Find(&courses).Error; err != nil {
 		return nil, err
 	}
 
@@ -125,9 +126,9 @@ func (d *dbRepo) FetchPendingCoursesForUser(userID uuid.UUID) ([]models.Course, 
 
 func (d *dbRepo) FetchCompletedCoursesForUser(userID uuid.UUID) ([]models.Course, error) {
 	courses := []models.Course{}
-	if err := d.DB.Joins("ViewedCourses").
-		Joins("Course").
-		Find(&courses, "viewed_courses.user_id = ? AND viewed_courses.is_completed = ?", userID, true).Error; err != nil {
+
+	if err := d.DB.Joins("JOIN viewed_courses ON courses.id = viewed_courses.course_id AND viewed_courses.is_completed = true AND viewed_courses.user_id = ?", userID).
+		Find(&courses).Error; err != nil {
 		return nil, err
 	}
 

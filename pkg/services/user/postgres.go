@@ -20,7 +20,7 @@ func (d *dbRepo) CreateUser(u *models.User) (*models.User, error) {
 
 func (d *dbRepo) GetUserByEmail(email string) (*models.User, error) {
 	u := models.User{}
-	if err := d.DB.Find(&u, "email = ?", email).Error; err != nil {
+	if err := d.DB.First(&u, "email = ?", email).Error; err != nil {
 		return nil, err
 	}
 
