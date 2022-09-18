@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/spf13/viper"
 )
@@ -17,7 +16,6 @@ var (
 
 func LoadConfigVars() {
 	ENVIRONMENT = viper.GetString("ENVIRONMENT")
-	PORT = strconv.Itoa(viper.GetInt("PORT"))
 	username := viper.GetString("DB_USER")
 	password := viper.GetString("DB_PASS")
 	dbName := viper.GetString("DB_NAME")
