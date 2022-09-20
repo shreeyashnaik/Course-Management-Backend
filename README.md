@@ -76,3 +76,23 @@ Overview of the layout:
 Before running make sure to add `.env` file. Refer `sample.env`
 
 `go run main.go`
+
+
+## DB Schema Details
+
+<strong>Table 1</strong>: `users`<br/>
+All the users including `superadmin`, `admin`, `employee`.
+
+<strong>Table 2</strong>: `courses`<br/>
+All the courses designed by a `user (admin)`. Hence `user_id`
+in courses will refer to `id` in `users`.
+
+<strong>Table 3</strong>: `viewed_courses` (join table between `users` and `courses`)<br/>
+This table is a result of many-to-many relationship between
+users and courses. If the user U has viewed course C, we insert U & C as a
+composite primary key in `viewed_courses`. If U has completed C, we mark
+`is_completed` to be `true`. We get to know the course completion status by
+`completed_duration` attribute in the table.
+
+### <strong>DB Schema Diagram</strong>
+![image](/db_schema.png)
